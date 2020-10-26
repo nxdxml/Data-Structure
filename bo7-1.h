@@ -183,25 +183,83 @@ Status PutVex(MGraph &G, VertexType v, VertexType value)
     return OK;
 }
 
-int FirstAdjVex(MGraph G,int v) //返回v第一个邻接点的序号
-{}
-int NextAdjVex(MGraph G,int v,int w) //返回相对w的下一个邻接点序号
-{}
-void InsertVex(MGraph &G,VertexType v) //
-{}
-Status InsertArc(MGraph &G,VertexType v,VertexType w) //
-{}
-Status DeleteArc(MGraph &G,VertexType v,VertexType w) //
-{}
-Status DeleteVex(MGraph &G,VertexType v) //
-{}
+int FirstAdjVex(MGraph G, int v) //返回v第一个邻接点的序号
+{
+    int i;
+    VRType j = 0;
+    if (G.kind % 2)
+        j = INFINITY;
+    for (i = 0; i < G.vexnum; i++)
+    {
+        if (G.arcs[v][i].adj != j)
+            return i;
+    }
+    return -1;
+}
+int NextAdjVex(MGraph G, int v, int w) //返回v相对w的下一个邻接点序号
+{
+    int i;
+    VRType j = 0;
+    if (G.kind % 2)
+        j = INFINITY;
+    for (i = w + 1; i < G.vexnum; i++)
+    {
+        if (G.arcs[v][i].adj != j)
+            return i;
+    }
+    return -1;
+}
+void InsertVex(MGraph &G, VertexType v) //
+{
+    int i;
+    VRType j = 0;
+    if (G.kind % 2)
+        j = INFINITY;
+    G.vexs[G.vexnum] = v;
+    for (i = 0; i <= G.vexnum; i++)
+    {
+        G.arcs[i][G.vexnum].adj = G.arcs[G.vexnum][i].adj = j;
+        G.arcs[i][G.vexnum].info = G.arcs[G.vexnum][i].info = nullptr;
+    }
+    ++G.vexnum;
+}
+Status InsertArc(MGraph &G, VertexType v, VertexType w) //
+{
+    int i, v1, w1;
+    v1 = LocateVex(G, v);
+    w1 = LocateVex(G, w);
+    if (v1 < 0 || w1 < 0)
+        return ERROR;
+    ++G.arcnum;
+    if (G.kind % 2)
+    {
+        printf("输入权：");
+        scanf("%d", &G.arcs[v1][w1]);
+    }
+    else
+        G.arcs[v1][w1].adj = 1; //图
+    printf("是否输入弧线信息（1，0）");
+    scanf("%d%*c", &i);
+    if (i)
+    {
+        InputArc(G.arcs[v1][w1].info);
+    }
+    if (G.kind > 1)
+        G.arcs[v1][w1] = G.arcs[w1][v1];
+    return OK;
+}
+Status DeleteArc(MGraph &G, VertexType v, VertexType w) //
+{
+}
+Status DeleteVex(MGraph &G, VertexType v) //
+{
+}
 void DestroyGraph(MGraph &G) //
-{}
+{
+}
 void Display(MGraph G) //
-{}
+{
+}
 void CreateFromFile(MGraph &G, char *filename, int IncInfo) //使用文件创建
-{}
-
-
-
-
+{
+}
